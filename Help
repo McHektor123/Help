@@ -1,0 +1,366 @@
+package smartphone_hmi.imis.uni_luebeck.de.smartphone_hmi_app.Off_Drive_Screen;
+
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
+
+import android.widget.RelativeLayout.LayoutParams;
+
+import java.text.DecimalFormat;
+
+import smartphone_hmi.imis.uni_luebeck.de.obd_api.OBD_API.Events.DataPointEvent;
+import smartphone_hmi.imis.uni_luebeck.de.obd_api.OBD_API.OBD_Methods.DataPoint;
+import smartphone_hmi.imis.uni_luebeck.de.smartphone_hmi_app.Off_Drive_Screen.DataScreenCheckboxes.ListViewWithCheckboxActivityLiveData;
+import smartphone_hmi.imis.uni_luebeck.de.smartphone_hmi_app.R;
+
+/**
+ * shows raw data on the screen
+ */
+public class DataScreen_6 extends Fragment {
+    private static int i=0;
+    private TextView viewICEPower;
+    private TextView viewSoc;
+    private TextView viewIceRpm;
+    private TextView viewHvCurrent;
+    private TextView viewIceLoad;
+    private TextView viewMg1Torque;
+    private TextView viewMg1Temp;
+    private TextView viewMg2Torque;
+    private TextView viewMg2Temp;
+    private TextView viewRegen;
+    private TextView viewODO;
+    private TextView viewFriction;
+    private TextView viewMG1Revo;
+    private TextView viewMG2Revo;
+    private TextView viewMasterCyl;
+    private TextView viewCrankPos;
+    private TextView viewHVCharge;
+    private TextView viewHVDisCharge;
+    private TextView viewHVTemp;
+    private TextView viewICETemp;
+    private TextView viewWIN;
+    private TextView viewWOUT;
+    private TextView viewSpeed;
+    private CardView c1;
+    private CardView c2;
+    private CardView c3;
+    private CardView c4;
+    private CardView c5;
+    private CardView c6;
+    private CardView c7;
+    private TextView t00;
+    private TextView t01;
+    private TextView t10;
+    private TextView t11;
+    private TextView t20;
+    private TextView t21;
+    private TextView t30;
+    private TextView t31;
+    private TextView t40;
+    private TextView t41;
+    private TextView t50;
+    private TextView t51;
+    private TextView t60;
+    private TextView t61;
+    private TextView t70;
+    private TextView t71;
+    protected View mView;
+
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View dataFragmentView = inflater.inflate(R.layout.test_data_screen, null);
+        t00= dataFragmentView.findViewById(R.id.te00) ;
+        t01= dataFragmentView.findViewById(R.id.te01) ;
+        t10= dataFragmentView.findViewById(R.id.te10) ;
+        t11= dataFragmentView.findViewById(R.id.te11) ;
+        t20= dataFragmentView.findViewById(R.id.te20) ;
+        t21= dataFragmentView.findViewById(R.id.te21) ;
+        t30= dataFragmentView.findViewById(R.id.te30) ;
+        t31= dataFragmentView.findViewById(R.id.te31) ;
+        t40= dataFragmentView.findViewById(R.id.te40) ;
+        t41= dataFragmentView.findViewById(R.id.te41) ;
+        t50= dataFragmentView.findViewById(R.id.te50) ;
+        t51= dataFragmentView.findViewById(R.id.te51) ;
+        t60= dataFragmentView.findViewById(R.id.te60) ;
+        t61= dataFragmentView.findViewById(R.id.te61) ;
+        t70= dataFragmentView.findViewById(R.id.te70) ;
+        t71= dataFragmentView.findViewById(R.id.te71) ;
+        c1=dataFragmentView.findViewById(R.id.ca1);
+        c2=dataFragmentView.findViewById(R.id.ca2);
+        c3=dataFragmentView.findViewById(R.id.ca3);
+        c4=dataFragmentView.findViewById(R.id.ca4);
+        c5=dataFragmentView.findViewById(R.id.ca5);
+        c6=dataFragmentView.findViewById(R.id.ca6);
+        c7=dataFragmentView.findViewById(R.id.ca7);
+        this.mView=dataFragmentView;
+        initViews();
+        EventBus.getDefault().register(this);
+        return dataFragmentView;
+    }
+    //fill the blank boxes with textes
+    private void setTextes( TextView t00, TextView t01, TextView t10 , TextView t11, TextView t20, TextView t21, TextView t30 , TextView t31,
+                           TextView t40, TextView t41,  TextView t50 ,TextView t51,TextView t60,TextView t61 ,TextView t70,TextView t71
+                            , TextView D, String T1,String T2, int d){
+        switch (i){
+            case 0:
+                D= mView.findViewById(R.id.dy0);
+                if(ListViewWithCheckboxActivityLiveData.trueCount<=4) {
+                    D.setPadding(39,39,39,193);
+                }
+                t00.setText(T1);
+                t00.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t01.setText(T2);
+                i++;
+                break;
+            case 1:
+                D=mView.findViewById(R.id.dy1);
+                if(ListViewWithCheckboxActivityLiveData.trueCount<=4) {
+                    D.setPadding(39,39,39,193);
+                }
+                t10.setText(T1);
+                t10.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t11.setText(T2);
+                i++;
+                break;
+            case 2:
+                D=mView.findViewById(R.id.dy2);
+                if(ListViewWithCheckboxActivityLiveData.trueCount<=4) {
+                    D.setPadding(39,39,39,193);
+                }
+                t20.setText(T1);
+                t20.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t21.setText(T2);
+                i++;
+                break;
+            case 3:
+                D=mView.findViewById(R.id.dy3);
+                if(ListViewWithCheckboxActivityLiveData.trueCount<=4) {
+                    D.setPadding(39,39,39,193);
+                }
+                t30.setText(T1);
+                t30.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t31.setText(T2);
+                i++;
+                break;
+            case 4:
+                D=mView.findViewById(R.id.dy4);
+                t40.setText(T1);
+                t40.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t41.setText(T2);
+                i++;
+                break;
+            case 5:
+                D=mView.findViewById(R.id.dy5);
+                t50.setText(T1);
+                t50.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t51.setText(T2);
+                i++;
+                break;
+            case 6:
+                D=mView.findViewById(R.id.dy6);
+                t60.setText(T1);
+                t60.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t61.setText(T2);
+                i++;
+                break;
+            case 7:
+                D=mView.findViewById(R.id.dy7);
+                t70.setText(T1);
+                t70.setCompoundDrawablesWithIntrinsicBounds(d,0,0,0 );
+                t71.setText(T2);
+                i++;
+                break;
+        }
+    }
+    /**
+     * initializes views
+     */
+    private void initViews() {
+        if(ListViewWithCheckboxActivityLiveData.trueCount<=7) {
+            c7.setVisibility(View.GONE);
+            if(ListViewWithCheckboxActivityLiveData.trueCount<=6) {
+                c6.setVisibility(View.GONE);
+                if(ListViewWithCheckboxActivityLiveData.trueCount<=5) {
+                    c5.setVisibility(View.GONE);
+                    if(ListViewWithCheckboxActivityLiveData.trueCount<=4) {
+                        c4.setVisibility(View.GONE);
+                        if(ListViewWithCheckboxActivityLiveData.trueCount<=3) {
+                            c3.setVisibility(View.INVISIBLE);
+                            if(ListViewWithCheckboxActivityLiveData.trueCount<=2) {
+                                c2.setVisibility(View.INVISIBLE);
+                                if(ListViewWithCheckboxActivityLiveData.trueCount<=1){
+                                    c1.setVisibility(View.GONE);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[0]) {
+            setTextes( t00, t01, t10, t11, t20, t21, t30, t31, t40,  t41, t50, t51,t60,t61,t70,t71,this.viewICEPower, "ICE POWER", "HP", R.drawable.ic_icons8_autobatterie_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[1]) {
+            setTextes( t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,this.viewSpeed, "Speed", "km/h", R.drawable.ic_icons8_geschwindigkeit_24_01);
+            viewSpeed=mView.findViewById(R.id.dy1);
+            viewSpeed.setText("asdad");
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[2]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,this.viewODO, "Odo Meter", "km", R.drawable.ic_icons8_geschwindigkeit_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[3]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewSoc, "State of Charge", "%", R.drawable.ic_icons8_autobatterie_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[4]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewFriction, "Friction Brake Power", "KW", R.drawable.ic_icons8_geschwindigkeit_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[5]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewRegen, "Regen Torque", "Nm", R.drawable.ic_icons8_batterie_aufladen_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[6]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewMG1Revo, "MG1 Revolution", "rpm", R.drawable.ic_icons8_geschwindigkeit_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[7]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewMG2Revo, "MG2 Revolution", "rpm", R.drawable.ic_icons8_geschwindigkeit_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[8]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewMasterCyl, "Master Cylinder", "Nm", R.drawable.ic_icons8_geschwindigkeit_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[9]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewIceRpm, "Ice Rpm", "rpm", R.drawable.ic_icons8_motor_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[10]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewHvCurrent,"HV Current", "Amp", R.drawable.ic_icons8_autobatterie_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[11]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewMg1Temp, "MG Temp", "F", R.drawable.ic_icons8_temperatur_24_01_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[12]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewCrankPos, "Crank Position", "deg", R.drawable.ic_icons8_elektricity_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[13]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewHVCharge, "HV Charge", "kW", R.drawable.ic_icons8_elektricity_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[14]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewHVDisCharge, "HV Discharge", "kW", R.drawable.ic_icons8_elektricity_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[15]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewHVTemp, "HV battery Temp", "F", R.drawable.ic_icons8_temperatur_24_01_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[16]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewICETemp, "ICE Temp", "C", R.drawable.ic_icons8_temperatur_24_01_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[17]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewMg2Torque, "MG1 Torque", "Nm", R.drawable.ic_icons8_elektricity_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[18]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewMg2Torque, "MG2 Torque", "Nm", R.drawable.ic_icons8_elektricity_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[19]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewWIN, "WIN", "kW", R.drawable.ic_icons8_elektricity_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[20]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewWOUT, "WOUT", "kW", R.drawable.ic_icons8_elektricity_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[21]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewIceLoad, "ICE Load", "%", R.drawable.ic_icons8_benzin_24_01);
+        }
+        if (ListViewWithCheckboxActivityLiveData.LiveArray[22]) {
+            setTextes(t00, t01, t10, t11, t20, t21, t30, t31, t40, t41, t50, t51,t60,t61,t70,t71,viewMg2Temp, "MG1/2 INV Temp", "F", R.drawable.ic_icons8_batterie_aufladen_24_01);
+        }
+    }
+
+    /**
+     * gets called if the eventbus receives new driving data
+     * @param event
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void updateData(DataPointEvent event){
+        DataPoint result = event.message;
+
+        DecimalFormat df = new DecimalFormat("###.##");
+        DecimalFormat df1 = new DecimalFormat("###");
+
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[0]) {
+            viewICEPower.setText(df.format(result.getIcePower()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[1]) {
+            viewSpeed.setText(df.format(result.getSpeed()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[2]) {
+            viewODO.setText(df.format(result.getOdometer()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[3]) {
+            viewSoc.setText(df.format(result.getSoc()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[4]) {
+            viewFriction.setText(df.format(result.getFrictionBrakePower()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[5]) {
+            viewRegen.setText(df.format(result.getRegenerativeBrakeTorque()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[6]) {
+            viewMG1Revo.setText(df.format(result.getMg1Rpm()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[7]) {
+            viewMG2Revo.setText(df.format(result.getMg2Rpm()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[8]) {
+            viewMasterCyl.setText(df.format(result.getMastCylTorque()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[9]) {
+            viewIceRpm.setText(df1.format(result.getIceRpm()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[10]) {
+            viewHvCurrent.setText(df.format(result.getBatteryCurrent()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[11]) {
+            viewMg1Temp.setText(df.format(result.getMgTemp()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[12]) {
+            viewCrankPos.setText(df.format(result.getCrankPosition()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[13]) {
+            viewHVCharge.setText(df.format(result.getBatteryCharge()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[14]) {
+            viewHVDisCharge.setText(df.format(result.getBatteryDischarge()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[15]) {
+            viewHVTemp.setText(df.format(result.getBatteryTemp()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[16]) {
+            viewICETemp.setText(df.format(result.getIceTemp()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[17]) {
+            viewMg1Torque.setText(df.format(result.getMg1Torque()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[18]) {
+            viewMg2Torque.setText(df.format(result.getMg2Torque()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[19]) {
+            viewWIN.setText(df.format(result.getWIN()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[20]) {
+            viewWOUT.setText(df.format(result.getWOUT()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[21]) {
+            viewIceLoad.setText(df1.format(result.getIceTemp()));
+        }
+        if(ListViewWithCheckboxActivityLiveData.LiveArray[22]) {
+            viewMg2Temp.setText(df.format(result.getMgInvTemp()));
+        }
+    }
+}
